@@ -1,6 +1,6 @@
 # SYSTEM-STATE — GMKtec EVO-X2
 > Автоматически обновляется каждые 5 минут
-> Последнее сканирование: 2026-04-07 00:30 CEST
+> Последнее сканирование: 2026-04-07 00:35 CEST
 > Источник: ctio-watcher.sh v2 (cron)
 
 ## Назначение
@@ -11,8 +11,8 @@
 ---
 
 ## Ресурсы
-- RAM: 11Gi / 30Gi (free: 2.3Gi)
-- Load: 1.93 2.12 2.35
+- RAM: 11Gi / 30Gi (free: 1.8Gi)
+- Load: 2.22 2.18 2.30
 - GPU VRAM used: 58.5 GB
 
 ## Диски
@@ -49,6 +49,7 @@ fail2ban.service running
 fwupd.service running
 getty@tty1.service running
 gnome-remote-desktop.service running
+guiyon-api.service running
 guiyon-bridge.service running
 guiyon-dispatcher.service running
 guiyon-project-api.service running
@@ -70,7 +71,6 @@ openclaw-gateway-ctio.service running
 openclaw-gateway-guiyon.service running
 openclaw-gateway-moa.service running
 openvpn.service exited
-packagekit.service running
 pii-proxy.service running
 plymouth-quit-wait.service exited
 plymouth-read-write.service exited
@@ -235,7 +235,7 @@ xrdp-sesman.service running
 | kyb-app | ghcr.io/ballerine-io/kyb-app:dev | Up 4 days | 0.0.0.0:5201->80/tcp, [::]:5201->80/tcp |
 | workflows-dashboard | ghcr.io/ballerine-io/workflows-dashboard:dev | Up 4 days | 0.0.0.0:5200->80/tcp, [::]:5200->80/tcp |
 | backoffice | ghcr.io/ballerine-io/backoffice:dev | Up 4 days | 0.0.0.0:5137->80/tcp, [::]:5137->80/tcp |
-| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up 6 seconds | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
+| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up 11 seconds | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
 | jube.webapi | jube.app | Up 4 days (healthy) | 127.0.0.1:5001->5001/tcp |
 | jube.jobs | jube.app | Up 4 days (healthy) | 5001/tcp |
 | postgres | postgres:17 | Up 2 hours | 0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp, 127.0.0.1:15432->5432/tcp |
@@ -380,28 +380,28 @@ xrdp-sesman.service running
 
 
 #### /home/ctio
-- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (16621 bytes, 2026-04-07 00:30:03)
-- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 00:30:03)
+- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (16641 bytes, 2026-04-07 00:35:03)
+- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 00:35:03)
 
 #### /opt
-- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (16621 bytes, 2026-04-07 00:30:03)
-- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 00:30:03)
+- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (16641 bytes, 2026-04-07 00:35:03)
+- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 00:35:03)
 
 #### /data
-- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 00:25:17)
-- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 00:30:00)
-- `/data/guiyon-project/.git/index` (33507 bytes, 2026-04-07 00:30:00)
+- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 00:30:19)
+- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 00:35:02)
+- `/data/guiyon-project/.git/index` (33507 bytes, 2026-04-07 00:35:02)
 
 #### /root
-- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 00:25:13)
-- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (16621 bytes, 2026-04-07 00:30:03)
-- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 00:30:03)
-- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (16621 bytes, 2026-04-07 00:30:03)
-- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 00:30:03)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (16621 bytes, 2026-04-07 00:30:03)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 00:30:03)
-- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (16621 bytes, 2026-04-07 00:30:03)
-- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 00:30:03)
+- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 00:30:14)
+- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (16641 bytes, 2026-04-07 00:35:03)
+- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 00:35:03)
+- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (16641 bytes, 2026-04-07 00:35:03)
+- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 00:35:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (16641 bytes, 2026-04-07 00:35:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 00:35:03)
+- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (16641 bytes, 2026-04-07 00:35:03)
+- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 00:35:03)
 
 ---
 
