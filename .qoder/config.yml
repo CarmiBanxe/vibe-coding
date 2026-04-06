@@ -1,0 +1,37 @@
+# ~/.qoder/config.yml — Developer Core Configuration
+# WSL-optimized Qoder CLI config for all projects
+
+# WSL-specific optimizations (prevents hangs)
+wsl:
+  watchPolling: true
+  watchInterval: 1000
+  maxConcurrentOperations: 2
+  preferWslPaths: true
+  disableInterop: true
+
+# MCP server behavior - auto-load context from hierarchy
+mcp:
+  loadContext: true
+  contextPaths:
+    - "AGENTS.md"
+    - ".qoder/context.md"
+    - "CLAUDE.md"
+    - "docs/COLLAB.md"
+    - "compliance/COMPLIANCE_ARCH.md"
+  timeout: 60000
+
+# Execution limits
+execution:
+  maxWorkers: 2
+  commandTimeout: 300
+  retryCount: 1
+  ignorePatterns:
+    - "node_modules/**"
+    - ".git/**"
+    - "**/*.pyc"
+    - "__pycache__/**"
+
+# Logging
+logging:
+  level: info
+  path: ~/.qoder/logs

@@ -1,0 +1,197 @@
+# docker-compose.midaz.yml — Midaz CBS Integration (Variant 2: lightweight)
+# BANXE AI Bank — Sprint 8 BLOCK-A
+# ADR-013: Midaz PRIMARY CBS, Fineract FALLBACK
+#
+# Infrastructure reused from GMKtec:
+#   PostgreSQL 17: existing postgres container (:5432) — new DBs midaz_onboarding, midaz_transaction
+#   Redis: existing redis-stack (:6379) — key prefix "midaz:"
+#
+# New containers (+3):
+#   midaz-mongodb     — metadata store (single-node replica set rs0)
+#   midaz-rabbitmq    — async tx processing
+#   midaz-ledger      — unified CBS (onboarding + transaction)
+#
+# External port: :8095 → internal :3002
+# Run: cd /data/vibe-coding && docker compose -f docker-compose.midaz.yml up -d
+
+services:
+
+  # ── MongoDB 8 (single-node replica set required for change streams) ──────────
+  midaz-mongodb:
+    image: mongo:8
+    container_name: midaz-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: midaz
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "127.0.0.1:5703:27017"
+    volumes:
+      - midaz-mongodb-data:/data/db
+      - /data/banxe/midaz/mongo/keyfile:/etc/mongo/keyfile:ro
+    command: ["--replSet", "rs0", "--bind_ip_all", "--keyFile", "/etc/mongo/keyfile"]
+    healthcheck:
+      test: |
+        mongosh --quiet --eval 'db.runCommand({ping:1}).ok' \
+          -u midaz -p ${MONGO_PASSWORD} --authenticationDatabase admin
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - midaz-network
+
+  # ── MongoDB replica set init (one-shot) ──────────────────────────────────────
+  midaz-mongo-init:
+    image: mongo:8
+    container_name: midaz-mongo-init
+    depends_on:
+      midaz-mongodb:
+        condition: service_healthy
+    restart: on-failure
+    command: >
+      mongosh --host midaz-mongodb
+              -u midaz
+              -p ${MONGO_PASSWORD}
+              --authenticationDatabase admin
+              --eval "
+        try { rs.status(); print('rs0: already initialized'); }
+        catch(e) {
+          rs.initiate({_id:'rs0', members:[{_id:0, host:'midaz-mongodb:27017'}]});
+          print('rs0: initialized');
+        }
+      "
+    networks:
+      - midaz-network
+
+  # ── RabbitMQ 4.1.3 (async transaction queue) ─────────────────────────────────
+  midaz-rabbitmq:
+    image: rabbitmq:4.1.3-management-alpine
+    container_name: midaz-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: midaz
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_CONSUMER_URI: amqp://midaz:midaz_rmq_2026@midaz-rabbitmq:5672
+      RABBITMQ_PRODUCER_URI: amqp://midaz:midaz_rmq_2026@midaz-rabbitmq:5672
+      RABBITMQ_MANAGEMENT_URI: http://midaz:midaz_rmq_2026@midaz-rabbitmq:15672
+      RABBITMQ_HEALTH_CHECK_URL: http://midaz:midaz_rmq_2026@midaz-rabbitmq:15672
+    ports:
+      - "127.0.0.1:3003:15672"   # management UI
+      - "127.0.0.1:3004:5672"    # AMQP
+    volumes:
+      - midaz-rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    networks:
+      - midaz-network
+
+  # ── Midaz Ledger v3.5.3 (unified CBS: onboarding + transaction) ──────────────
+  midaz-ledger:
+    image: lerianstudio/midaz-ledger:latest   # distroless/static — no curl, healthcheck external
+    container_name: midaz-ledger
+    restart: unless-stopped
+    depends_on:
+      midaz-mongodb:
+        condition: service_healthy
+      midaz-rabbitmq:
+        condition: service_healthy
+      midaz-mongo-init:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:8095:3002"
+    extra_hosts:
+      - "172.22.0.1:host-gateway"   # reach host PG:5432 and Redis:6379
+    environment:
+      SERVER_PORT: "3002"
+      SERVER_ADDRESS: ":3002"
+      ENV: "local"
+
+      # ── PostgreSQL (onboarding schema) — reuse existing postgres:17 ──────────
+      DB_ONBOARDING_HOST: 172.22.0.1
+      DB_ONBOARDING_PORT: "5432"
+      DB_ONBOARDING_NAME: midaz_onboarding
+      DB_ONBOARDING_USER: midaz_app
+      DB_ONBOARDING_PASSWORD: ${DB_PASSWORD}
+      DB_ONBOARDING_SSLMODE: disable
+      DB_ONBOARDING_REPLICA_HOST: 172.22.0.1
+      DB_ONBOARDING_REPLICA_PORT: "5432"
+      DB_ONBOARDING_REPLICA_USER: midaz_app
+      DB_ONBOARDING_REPLICA_PASSWORD: ${DB_PASSWORD}
+      DB_ONBOARDING_REPLICA_NAME: midaz_onboarding
+      DB_ONBOARDING_REPLICA_SSLMODE: disable
+
+      # ── PostgreSQL (transaction schema) ──────────────────────────────────────
+      DB_TRANSACTION_HOST: 172.22.0.1
+      DB_TRANSACTION_PORT: "5432"
+      DB_TRANSACTION_NAME: midaz_transaction
+      DB_TRANSACTION_USER: midaz_app
+      DB_TRANSACTION_PASSWORD: ${DB_PASSWORD}
+      DB_TRANSACTION_SSLMODE: disable
+      DB_TRANSACTION_REPLICA_HOST: 172.22.0.1
+      DB_TRANSACTION_REPLICA_PORT: "5432"
+      DB_TRANSACTION_REPLICA_USER: midaz_app
+      DB_TRANSACTION_REPLICA_PASSWORD: ${DB_PASSWORD}
+      DB_TRANSACTION_REPLICA_NAME: midaz_transaction
+      DB_TRANSACTION_REPLICA_SSLMODE: disable
+
+      # ── MongoDB ───────────────────────────────────────────────────────────────
+      MONGO_ONBOARDING_PROTOCOL: mongodb
+      MONGO_ONBOARDING_HOST: midaz-mongodb
+      MONGO_ONBOARDING_PORT: "27017"
+      MONGO_ONBOARDING_NAME: midaz_onboarding
+      MONGO_ONBOARDING_URI: mongodb
+      MONGO_ONBOARDING_USER: midaz
+      MONGO_ONBOARDING_PASSWORD: ${MONGO_PASSWORD}
+
+      MONGO_TRANSACTION_PROTOCOL: mongodb
+      MONGO_TRANSACTION_HOST: midaz-mongodb
+      MONGO_TRANSACTION_PORT: "27017"
+      MONGO_TRANSACTION_NAME: midaz_transaction
+      MONGO_TRANSACTION_URI: mongodb
+      MONGO_TRANSACTION_USER: midaz
+      MONGO_TRANSACTION_PASSWORD: ${MONGO_PASSWORD}
+
+      # ── Redis (reuse existing redis-stack :6379) ─────────────────────────────
+      # Midaz expects REDIS_HOST as "host:port" (strings.Split by comma)
+      REDIS_HOST: "172.22.0.1:6379"
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      REDIS_DB: "1"   # DB 1 isolates Midaz from Banxe compliance (DB 0)
+
+      # ── RabbitMQ ──────────────────────────────────────────────────────────────
+      RABBITMQ_URI: amqp
+      RABBITMQ_HOST: midaz-rabbitmq
+      RABBITMQ_PORT_HOST: "5672"
+      RABBITMQ_CONSUMER_USER: midaz
+      RABBITMQ_CONSUMER_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_PORT_AMQP: "5672"
+      RABBITMQ_DEFAULT_USER: midaz
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_CONSUMER_URI: amqp://midaz:midaz_rmq_2026@midaz-rabbitmq:5672
+      RABBITMQ_PRODUCER_URI: amqp://midaz:midaz_rmq_2026@midaz-rabbitmq:5672
+      RABBITMQ_MANAGEMENT_URI: http://midaz:midaz_rmq_2026@midaz-rabbitmq:15672
+      RABBITMQ_HEALTH_CHECK_URL: http://midaz:midaz_rmq_2026@midaz-rabbitmq:15672
+
+      # ── Security / Telemetry ──────────────────────────────────────────────────
+      PLUGIN_AUTH_ENABLED: "false"      # internal EMI use, behind existing gateway
+      ENABLE_TELEMETRY: "false"
+
+    healthcheck:
+      disable: true   # distroless/static: no curl. External: curl http://127.0.0.1:8095/health
+    networks:
+      - midaz-network
+
+networks:
+  midaz-network:
+    name: midaz-network
+    driver: bridge
+
+volumes:
+  midaz-mongodb-data:
+    driver: local
+  midaz-rabbitmq-data:
+    driver: local

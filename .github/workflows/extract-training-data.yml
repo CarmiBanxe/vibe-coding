@@ -1,0 +1,183 @@
+name: Extract Training Data
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  extract:
+    name: Extract and push training corpus
+    runs-on: ubuntu-latest
+
+    # Пропускаем auto: SYSTEM-STATE коммиты (шум, не несут обучающей ценности)
+    if: "!startsWith(github.event.head_commit.message, 'auto: SYSTEM-STATE')"
+
+    steps:
+      - name: Checkout source repo (vibe-coding)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2   # нужен для diff с предыдущим коммитом
+
+      - name: Checkout target repo (banxe-training-data)
+        uses: actions/checkout@v4
+        with:
+          repository: CarmiBanxe/banxe-training-data
+          token: ${{ secrets.TRAINING_DATA_TOKEN }}
+          path: training-data
+          # Создаёт репо автоматически если не существует — нет, нужно создать вручную
+          # Репо должно существовать заранее
+
+      - name: Prepare corpus directories
+        run: |
+          mkdir -p training-data/corpus/A-compliance
+          mkdir -p training-data/corpus/B-architecture
+          mkdir -p training-data/corpus/C-scenarios
+          mkdir -p training-data/corpus/D-decisions
+          mkdir -p training-data/corpus/E-feedback
+
+      # ─────────────────────────────────────────────────────────────────────
+      # A — Compliance: исходный код + схемы + архитектурные доки
+      # ─────────────────────────────────────────────────────────────────────
+      - name: Extract A-compliance
+        run: |
+          SRC="src/compliance"
+          DST="training-data/corpus/A-compliance"
+
+          # Python-модули (логика, без тестов)
+          for f in api.py audit_trail.py crypto_aml.py dashboard.py \
+                   sanctions_check.py tx_monitor.py pep_check.py \
+                   adverse_media.py doc_verify.py kyb_check.py \
+                   legal_databases.py; do
+            [ -f "$SRC/$f" ] && cp "$SRC/$f" "$DST/$f"
+          done
+
+          # SQL-схемы
+          for f in "$SRC"/*.sql; do
+            if [ -f "$f" ]; then cp "$f" "$DST/"; fi
+          done
+
+          # Compliance architecture docs
+          if [ -f "docs/COMPLIANCE_ARCH.md" ];   then cp "docs/COMPLIANCE_ARCH.md"   "$DST/"; fi
+          if [ -f "docs/SANCTIONS_POLICY.md" ];  then cp "docs/SANCTIONS_POLICY.md"  "$DST/"; fi
+          if [ -f "docs/VERIFICATION-CANON.md" ]; then cp "docs/VERIFICATION-CANON.md" "$DST/"; fi
+
+      # ─────────────────────────────────────────────────────────────────────
+      # B — Architecture: коллаборация, агенты, память, OpenClaw reference
+      # ─────────────────────────────────────────────────────────────────────
+      - name: Extract B-architecture
+        run: |
+          DST="training-data/corpus/B-architecture"
+
+          if [ -f "docs/COLLAB.md" ];             then cp "docs/COLLAB.md"             "$DST/"; fi
+          if [ -f "docs/MEMORY.md" ];             then cp "docs/MEMORY.md"             "$DST/"; fi
+          if [ -f "docs/OPENCLAW-REFERENCE.md" ]; then cp "docs/OPENCLAW-REFERENCE.md" "$DST/"; fi
+          if [ -f "docs/SETUP-GUIDE.md" ];        then cp "docs/SETUP-GUIDE.md"        "$DST/"; fi
+          if [ -f "docs/MCP-BEST-PRACTICES.md" ]; then cp "docs/MCP-BEST-PRACTICES.md" "$DST/"; fi
+          if [ -f "docs/SOUL-PROTECTION.md" ];    then cp "docs/SOUL-PROTECTION.md"    "$DST/"; fi
+          if [ -f "CLAUDE.md" ];                  then cp "CLAUDE.md"                  "$DST/"; fi
+
+          # AGENTS.md из workspace (если есть в репо)
+          if [ -f "workspace-moa/AGENTS.md" ];    then cp "workspace-moa/AGENTS.md"    "$DST/"; fi
+
+      # ─────────────────────────────────────────────────────────────────────
+      # C — Scenarios: реальные кейсы, примеры решений
+      # ─────────────────────────────────────────────────────────────────────
+      - name: Extract C-scenarios
+        run: |
+          DST="training-data/corpus/C-scenarios"
+
+          if [ -f "docs/MIROFISH-SCENARIOS.md" ];   then cp "docs/MIROFISH-SCENARIOS.md"   "$DST/"; fi
+          if [ -f "docs/BOT-ERROR-PATTERNS.md" ];   then cp "docs/BOT-ERROR-PATTERNS.md"   "$DST/"; fi
+          if [ -f "docs/bot-archive-analysis.md" ]; then cp "docs/bot-archive-analysis.md" "$DST/"; fi
+
+          # SOUL.md — содержит operational compliance rules
+          if [ -f "docs/SOUL.md" ]; then cp "docs/SOUL.md" "$DST/SOUL-compliance-rules.md"; fi
+
+      # ─────────────────────────────────────────────────────────────────────
+      # D — Decisions: экспорт из ClickHouse (только если есть файл-дамп)
+      # Файл создаётся отдельным cron на GMKtec: backup-clickhouse-training.sh
+      # Формат: docs/training-exports/decisions-YYYY-MM.jsonl
+      # ─────────────────────────────────────────────────────────────────────
+      - name: Extract D-decisions (ClickHouse export if available)
+        run: |
+          DST="training-data/corpus/D-decisions"
+
+          # Ищем файлы экспорта в docs/training-exports/
+          if [ -d "docs/training-exports" ]; then
+            for f in docs/training-exports/decisions-*.jsonl \
+                     docs/training-exports/decisions-*.json \
+                     docs/training-exports/audit-*.jsonl; do
+              if [ -f "$f" ]; then cp "$f" "$DST/"; fi
+            done
+            FOUND=$(ls "$DST/" 2>/dev/null | wc -l)
+            echo "D-decisions: скопировано $FOUND файлов"
+          else
+            echo "D-decisions: docs/training-exports/ не найден — пропуск"
+            echo "# ClickHouse export not yet configured" > "$DST/README.md"
+            echo "# Run backup-clickhouse-training.sh on GMKtec to populate" >> "$DST/README.md"
+          fi
+
+      # ─────────────────────────────────────────────────────────────────────
+      # E — Feedback: результаты тестов (pytest output)
+      # ─────────────────────────────────────────────────────────────────────
+      - name: Run compliance tests and capture output
+        continue-on-error: true
+        run: |
+          cd src/compliance
+          pip install -q pytest 2>/dev/null || true
+          # Запускаем только если зависимости минимальны (без БД)
+          python -m pytest test_suite.py --tb=short -q \
+            --ignore=test_api_integration.py \
+            -o "addopts=" \
+            2>&1 | tee ../../training-data/corpus/E-feedback/pytest-output.txt || true
+          echo "Exit: $?" >> ../../training-data/corpus/E-feedback/pytest-output.txt
+
+      - name: Extract E-feedback (test results + verification docs)
+        run: |
+          DST="training-data/corpus/E-feedback"
+
+          # Результаты Semgrep если есть
+          if [ -f ".semgrep-results.json" ];     then cp ".semgrep-results.json"     "$DST/"; fi
+          if [ -f "docs/diagnostic-report.md" ]; then cp "docs/diagnostic-report.md" "$DST/"; fi
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Meta: добавляем метаданные коммита как контекст
+      # ─────────────────────────────────────────────────────────────────────
+      - name: Write corpus metadata
+        run: |
+          cat > training-data/corpus/META.json << EOF
+          {
+            "source_repo": "CarmiBanxe/vibe-coding",
+            "source_commit": "${{ github.sha }}",
+            "source_message": "${{ github.event.head_commit.message }}",
+            "extracted_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "triggered_by": "${{ github.actor }}",
+            "sections": ["A-compliance", "B-architecture", "C-scenarios", "D-decisions", "E-feedback"]
+          }
+          EOF
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Push в banxe-training-data
+      # ─────────────────────────────────────────────────────────────────────
+      - name: Commit and push training corpus
+        run: |
+          cd training-data
+          git config user.name  "banxe-training-bot"
+          git config user.email "training-bot@banxe.com"
+
+          git add -A
+
+          # Пишем только если есть реальные изменения
+          if git diff --cached --quiet; then
+            echo "Нет изменений в корпусе — push пропущен"
+            exit 0
+          fi
+
+          SHORT_SHA="${{ github.sha }}"
+          SHORT_SHA="${SHORT_SHA:0:7}"
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          EXTRACTED="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          git commit -m "corpus: sync from vibe-coding@${SHORT_SHA} | ${COMMIT_MSG} | ${EXTRACTED}"
+
+          git push

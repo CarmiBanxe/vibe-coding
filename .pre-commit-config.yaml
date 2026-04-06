@@ -1,0 +1,23 @@
+repos:
+  - repo: local
+    hooks:
+      - id: semgrep-banxe
+        name: Semgrep — Banxe финтех-правила
+        entry: semgrep --config .semgrep/banxe-rules.yml --error
+        language: system
+        types: [file]
+        pass_filenames: true
+
+      - id: semgrep-secrets
+        name: Semgrep — сканирование секретов
+        entry: semgrep --config=p/secrets --error
+        language: system
+        types: [file]
+        pass_filenames: true
+
+      - id: semgrep-security
+        name: Semgrep — OWASP Top 10
+        entry: semgrep --config=p/owasp-top-ten --error
+        language: system
+        types: [file]
+        pass_filenames: true

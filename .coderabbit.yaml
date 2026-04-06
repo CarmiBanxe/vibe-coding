@@ -1,0 +1,18 @@
+# CodeRabbit config — Banxe AI Bank
+language: ru
+reviews:
+  profile: assertive
+  auto_review:
+    enabled: true
+  path_instructions:
+    - path: "scripts/**"
+      instructions: |
+        Это bash-скрипты для финтех-инфраструктуры (FCA regulated).
+        Проверяй: захардкоженные секреты, unsafe eval, shell injection,
+        отсутствие set -euo pipefail, потенциальные sudo-уязвимости.
+    - path: "docs/**"
+      instructions: |
+        Документация проекта. Проверяй актуальность данных,
+        отсутствие утечки секретов/паролей.
+chat:
+  auto_reply: true

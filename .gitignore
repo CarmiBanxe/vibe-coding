@@ -1,0 +1,6 @@
+reports/verification/*.json
+qodercli-panic-*.log
+__pycache__/
+*.py[cod]
+*.pyc
+.env

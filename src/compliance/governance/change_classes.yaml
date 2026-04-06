@@ -1,0 +1,72 @@
+# change_classes.yaml — BANXE Governance Gate (G-05)
+#
+# Каждый файл в системе принадлежит одному из трёх классов изменений.
+# Класс определяет, требуется ли человеческое одобрение перед применением патча.
+#
+# CLASS A — авто-одобрение (низкий риск, обратимо)
+# CLASS B — требует approver: DEVELOPER | CTIO | CEO  (identity/behaviour risk)
+# CLASS C — требует approver: MLRO | CEO  (regulatory/compliance critical)
+#
+# target_patterns: glob-стили относительно корня vibe-coding репозитория.
+# Проверяется методом fnmatch (unix glob).
+
+change_classes:
+
+  A:
+    description: >
+      Low-risk, reversible changes. May be applied automatically by feedback_loop
+      or CI without human approval. Full audit trail still written.
+    requires_approver: false
+    approver_roles: []
+    audit_level: basic
+    target_patterns:
+      - "agents/workspace-moa/AGENTS.md"
+      - "src/compliance/verification/compliance_validator.py"
+      - "docs/MEMORY.md"
+      - "docs/SYSTEM-STATE.md"
+      - "**/*.md"            # generic docs — overridden by B/C specific patterns
+
+  B:
+    description: >
+      High-risk changes that directly affect agent identity, behaviour, or gateway
+      configuration. Require explicit human approver with a stated reason.
+      Applied via: feedback_loop.py --apply --approver <id> --reason "<text>"
+      Or via:      protect-soul.sh update <path> --approver <id> --reason "<text>"
+    requires_approver: true
+    approver_roles:
+      - DEVELOPER
+      - CTIO
+      - CEO
+    audit_level: full
+    target_patterns:
+      - "docs/SOUL.md"
+      - "**/SOUL.md"
+      - "**/SOUL-*.md"
+      - "agents/workspace-moa/openclaw.json"
+      - "**/.openclaw/openclaw.json"
+      - "**/openclaw.json"
+      - "**/IDENTITY.md"
+      - "**/BOOTSTRAP.md"
+
+  C:
+    description: >
+      Regulatory/compliance-critical changes. Require MLRO or CEO approval.
+      Must be logged to ClickHouse audit trail in addition to governance log.
+      These files affect thresholds, sanctions lists, or OPA policies used
+      in live AML decisions.
+    requires_approver: true
+    approver_roles:
+      - MLRO
+      - CEO
+    audit_level: clickhouse
+    target_patterns:
+      - "src/compliance/compliance_config.yaml"
+      - "src/compliance/policies/banxe_compliance.rego"
+      - "src/compliance/policies/**/*.rego"
+      - "developer/compliance/verification/compliance_validator.py"
+
+# Precedence: C > B > A (most restrictive class wins when multiple patterns match)
+precedence:
+  - C
+  - B
+  - A

@@ -1,0 +1,7 @@
+# Aider project config (migrated from .qoder/context.md)
+# Project: vibe-coding
+model: ollama_chat/qwen3-banxe-v2:latest
+auto-commits: true
+dirty-commits: true
+gitignore: true
+no-show-model-warnings: true

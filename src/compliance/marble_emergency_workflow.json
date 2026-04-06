@@ -1,0 +1,118 @@
+{
+  "_comment": "n8n workflow: Marble Emergency Stop webhook → compliance API",
+  "_doc": "Import via n8n UI: Workflows → Import from File",
+  "_endpoints": {
+    "activate": "POST http://127.0.0.1:8090/api/v1/compliance/emergency-stop",
+    "resume":   "POST http://127.0.0.1:8090/api/v1/compliance/emergency-resume",
+    "status":   "GET  http://127.0.0.1:8090/api/v1/compliance/emergency-stop/status"
+  },
+  "name": "Marble → Emergency Stop",
+  "nodes": [
+    {
+      "id": "webhook-trigger",
+      "name": "Marble Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "marble-emergency",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "notes": "URL: http://127.0.0.1:5678/webhook/marble-emergency\nMarble sends: {action: 'activate'|'resume', operator_id, reason, mlro_id, resume_reason}"
+    },
+    {
+      "id": "route-action",
+      "name": "Route by action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.action }}",
+        "rules": {
+          "rules": [
+            { "value2": "activate" },
+            { "value2": "resume"   },
+            { "value2": "status"   }
+          ]
+        },
+        "fallbackOutput": "none"
+      }
+    },
+    {
+      "id": "call-activate",
+      "name": "POST emergency-stop",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [700, 180],
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8090/api/v1/compliance/emergency-stop",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "Content-Type", "value": "application/json" }]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"operator_id\": \"{{ $json.operator_id }}\",\n  \"reason\": \"{{ $json.reason }}\",\n  \"scope\": \"all\"\n}"
+      }
+    },
+    {
+      "id": "call-resume",
+      "name": "POST emergency-resume",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [700, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8090/api/v1/compliance/emergency-resume",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "Content-Type", "value": "application/json" }]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"mlro_id\": \"{{ $json.mlro_id }}\",\n  \"resume_reason\": \"{{ $json.resume_reason }}\"\n}"
+      }
+    },
+    {
+      "id": "call-status",
+      "name": "GET stop status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [700, 420],
+      "parameters": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8090/api/v1/compliance/emergency-stop/status"
+      }
+    },
+    {
+      "id": "respond",
+      "name": "Respond to Marble",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [950, 300],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      }
+    }
+  ],
+  "connections": {
+    "Marble Webhook Trigger": {
+      "main": [[{ "node": "Route by action", "type": "main", "index": 0 }]]
+    },
+    "Route by action": {
+      "main": [
+        [{ "node": "POST emergency-stop",  "type": "main", "index": 0 }],
+        [{ "node": "POST emergency-resume", "type": "main", "index": 0 }],
+        [{ "node": "GET stop status",       "type": "main", "index": 0 }]
+      ]
+    },
+    "POST emergency-stop":  { "main": [[{ "node": "Respond to Marble", "type": "main", "index": 0 }]] },
+    "POST emergency-resume": { "main": [[{ "node": "Respond to Marble", "type": "main", "index": 0 }]] },
+    "GET stop status":       { "main": [[{ "node": "Respond to Marble", "type": "main", "index": 0 }]] }
+  }
+}

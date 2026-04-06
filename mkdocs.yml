@@ -1,0 +1,75 @@
+site_name: "Banxe AI Bank — Technical Documentation"
+site_description: "AML/KYC Compliance Stack — Collective LexisNexis"
+site_author: "Moriel Carmi"
+repo_url: "https://github.com/CarmiBanxe/vibe-coding"
+repo_name: "CarmiBanxe/vibe-coding"
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_root_heading: true
+            show_category_heading: true
+            members_order: source
+            docstring_style: google
+
+nav:
+  - Home: index.md
+  - Architecture: COMPLIANCE_ARCH.md
+  - API Reference:
+      - Overview: reference/index.md
+      - models: reference/models.md
+      - tx_monitor: reference/tx_monitor.md
+      - sanctions_check: reference/sanctions_check.md
+      - crypto_aml: reference/crypto_aml.md
+      - aml_orchestrator: reference/aml_orchestrator.md
+      - banxe_aml_orchestrator: reference/banxe_aml_orchestrator.md
+  - ADR:
+      - ADR Index: adr/index.md
+      - "0001 Watchman vs LexisNexis": adr/0001-watchman-over-lexisnexis.md
+      - "0002 3-layer Architecture": adr/0002-collective-lexisnexis-architecture.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - toc:
+      permalink: true
+
+docs_dir: docs
+site_dir: site

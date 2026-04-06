@@ -1,0 +1,10 @@
+[run]
+source = src/compliance
+omit =
+    src/compliance/test_*.py
+    src/compliance/conftest.py
+
+[report]
+exclude_lines =
+    if __name__ == .__main__.:
+    pragma: no cover

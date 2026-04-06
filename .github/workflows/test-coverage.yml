@@ -1,0 +1,58 @@
+name: Tests & Coverage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: pytest + coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dev dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Run tests with coverage
+        run: |
+          pytest \
+            --cov=src/compliance \
+            --cov-report=xml:coverage.xml \
+            --cov-report=term-missing \
+            -q
+        env:
+          PYTHONPATH: src
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage.xml
+            htmlcov/
+          retention-days: 14
+
+      - name: Coverage summary
+        run: |
+          python -c "
+          import xml.etree.ElementTree as ET
+          tree = ET.parse('coverage.xml')
+          root = tree.getroot()
+          pct = float(root.attrib.get('line-rate', 0)) * 100
+          print(f'Coverage: {pct:.1f}%')
+          if pct < 60:
+              print('WARNING: coverage below 60%')
+          "

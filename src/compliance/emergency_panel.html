@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BANXE — Emergency Stop Panel</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .panel {
+      background: #1a1d27;
+      border: 1px solid #2d3148;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 560px;
+      padding: 2rem;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #2d3148;
+      padding-bottom: 1.25rem;
+    }
+    .header h1 { font-size: 1.1rem; font-weight: 600; }
+    .badge {
+      font-size: 0.7rem;
+      background: #1e3a5f;
+      color: #60a5fa;
+      border: 1px solid #1e40af;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-weight: 500;
+    }
+
+    /* Status indicator */
+    .status-box {
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .status-box.active   { background: #2d1217; border: 1px solid #9f1239; }
+    .status-box.inactive { background: #0f2918; border: 1px solid #14532d; }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot.red   { background: #ef4444; box-shadow: 0 0 6px #ef4444; animation: pulse 1.4s infinite; }
+    .dot.green { background: #22c55e; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+
+    .status-text { flex: 1; }
+    .status-text strong { display: block; font-size: 0.9rem; }
+    .status-text small  { color: #94a3b8; font-size: 0.78rem; }
+
+    /* Form fields */
+    label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.35rem; }
+    input, textarea {
+      width: 100%;
+      background: #0f1117;
+      border: 1px solid #2d3148;
+      border-radius: 6px;
+      padding: 0.55rem 0.75rem;
+      color: #e2e8f0;
+      font-size: 0.88rem;
+      font-family: inherit;
+      margin-bottom: 1rem;
+      transition: border-color .15s;
+    }
+    input:focus, textarea:focus { outline: none; border-color: #3b82f6; }
+    textarea { resize: vertical; min-height: 72px; }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 0.7rem 1.25rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .15s, transform .1s;
+      letter-spacing: .01em;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-danger  { background: #dc2626; color: #fff; }
+    .btn-danger:hover:not(:disabled) { background: #b91c1c; }
+    .btn-success { background: #16a34a; color: #fff; }
+    .btn-success:hover:not(:disabled) { background: #15803d; }
+
+    /* Divider */
+    .or-divider {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin: 1rem 0;
+      color: #475569; font-size: 0.78rem;
+    }
+    .or-divider::before, .or-divider::after {
+      content: ""; flex: 1; height: 1px; background: #2d3148;
+    }
+
+    /* Alert */
+    .alert {
+      border-radius: 6px;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.82rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .alert.error   { background: #2d1217; border: 1px solid #9f1239; color: #fca5a5; }
+    .alert.success { background: #0f2918; border: 1px solid #14532d; color: #86efac; }
+
+    /* Metadata */
+    .meta { font-size: 0.75rem; color: #64748b; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #2d3148; }
+    .meta span { display: block; }
+
+    /* Section title */
+    .section-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #64748b;
+      margin-bottom: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+
+    <div class="header">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <h1>Emergency Stop</h1>
+      <span class="badge">EU AI Act Art. 14</span>
+    </div>
+
+    <!-- Status -->
+    <div id="status-box" class="status-box inactive">
+      <div id="status-dot" class="dot green"></div>
+      <div class="status-text">
+        <strong id="status-label">Loading…</strong>
+        <small id="status-detail"></small>
+      </div>
+    </div>
+
+    <div id="alert" class="alert"></div>
+
+    <!-- Activate section -->
+    <div id="activate-section">
+      <div class="section-title">Suspend automated screening</div>
+      <label for="operator_id">Your identity (email / handle) *</label>
+      <input id="operator_id" type="text" placeholder="compliance@banxe.io" autocomplete="off">
+      <label for="reason">Reason *</label>
+      <textarea id="reason" placeholder="e.g. FCA supervisory visit — all automated decisions require manual MLRO review"></textarea>
+      <button class="btn btn-danger" id="btn-stop" onclick="activateStop()">
+        ⏹ Activate Emergency Stop
+      </button>
+    </div>
+
+    <!-- Resume section (hidden when inactive) -->
+    <div id="resume-section" style="display:none">
+      <div class="or-divider">MLRO authority required to resume</div>
+      <label for="mlro_id">MLRO identity (email / handle) *</label>
+      <input id="mlro_id" type="text" placeholder="sarah.chen@banxe.io" autocomplete="off">
+      <label for="resume_reason">Resume reason *</label>
+      <textarea id="resume_reason" placeholder="e.g. FCA visit concluded — root cause identified and remediated"></textarea>
+      <button class="btn btn-success" id="btn-resume" onclick="resumeStop()">
+        ▶ Resume Automated Screening
+      </button>
+    </div>
+
+    <div class="meta">
+      <span id="meta-last-check"></span>
+      <span style="margin-top:.25rem">Endpoint: <code>POST /api/v1/compliance/emergency-stop</code></span>
+      <span>All decisions blocked → manual MLRO review while stop is active</span>
+    </div>
+
+  </div>
+
+  <script>
+    const API = '';   // same-origin — compliance API serves this page
+
+    function showAlert(msg, type) {
+      const el = document.getElementById('alert');
+      el.textContent = msg;
+      el.className = 'alert ' + type;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 6000);
+    }
+
+    async function loadStatus() {
+      try {
+        const r = await fetch(API + '/api/v1/compliance/emergency-stop/status');
+        const d = await r.json();
+        renderStatus(d);
+      } catch(e) {
+        document.getElementById('status-label').textContent = 'Cannot reach compliance API';
+        document.getElementById('status-detail').textContent = e.message;
+      }
+      document.getElementById('meta-last-check').textContent =
+        'Last polled: ' + new Date().toLocaleTimeString();
+    }
+
+    function renderStatus(d) {
+      const box    = document.getElementById('status-box');
+      const dot    = document.getElementById('status-dot');
+      const label  = document.getElementById('status-label');
+      const detail = document.getElementById('status-detail');
+      const actSec = document.getElementById('activate-section');
+      const resSec = document.getElementById('resume-section');
+
+      if (d.active) {
+        box.className   = 'status-box active';
+        dot.className   = 'dot red';
+        label.textContent  = '⛔ STOP ACTIVE — Automated screening SUSPENDED';
+        detail.textContent = [
+          d.operator_id ? 'By: ' + d.operator_id : '',
+          d.activated_at ? 'At: ' + new Date(d.activated_at).toLocaleString() : '',
+          d.reason ? 'Reason: ' + d.reason : '',
+        ].filter(Boolean).join('  ·  ');
+        actSec.style.display = 'none';
+        resSec.style.display = 'block';
+      } else {
+        box.className   = 'status-box inactive';
+        dot.className   = 'dot green';
+        label.textContent  = '✅ System running — Automated screening ACTIVE';
+        detail.textContent = 'All 4 screening endpoints operational';
+        actSec.style.display = 'block';
+        resSec.style.display = 'none';
+      }
+    }
+
+    async function activateStop() {
+      const operator_id = document.getElementById('operator_id').value.trim();
+      const reason      = document.getElementById('reason').value.trim();
+      if (!operator_id) { showAlert('operator_id is required', 'error'); return; }
+      if (!reason)      { showAlert('reason is required', 'error'); return; }
+
+      document.getElementById('btn-stop').disabled = true;
+      try {
+        const r = await fetch(API + '/api/v1/compliance/emergency-stop', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ operator_id, reason, scope: 'all' }),
+        });
+        const d = await r.json();
+        if (!r.ok) { showAlert('Error: ' + JSON.stringify(d.detail || d), 'error'); return; }
+        showAlert('Emergency stop activated at ' + d.activated_at, 'success');
+        loadStatus();
+      } catch(e) {
+        showAlert('Network error: ' + e.message, 'error');
+      } finally {
+        document.getElementById('btn-stop').disabled = false;
+      }
+    }
+
+    async function resumeStop() {
+      const mlro_id       = document.getElementById('mlro_id').value.trim();
+      const resume_reason = document.getElementById('resume_reason').value.trim();
+      if (!mlro_id)       { showAlert('mlro_id is required', 'error'); return; }
+      if (!resume_reason) { showAlert('resume_reason is required', 'error'); return; }
+
+      document.getElementById('btn-resume').disabled = true;
+      try {
+        const r = await fetch(API + '/api/v1/compliance/emergency-resume', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ mlro_id, resume_reason }),
+        });
+        const d = await r.json();
+        if (!r.ok) { showAlert('Error: ' + JSON.stringify(d.detail || d), 'error'); return; }
+        showAlert('Screening resumed by ' + d.mlro_id, 'success');
+        document.getElementById('mlro_id').value = '';
+        document.getElementById('resume_reason').value = '';
+        loadStatus();
+      } catch(e) {
+        showAlert('Network error: ' + e.message, 'error');
+      } finally {
+        document.getElementById('btn-resume').disabled = false;
+      }
+    }
+
+    // Poll every 15 seconds — lightweight, no WebSocket needed
+    loadStatus();
+    setInterval(loadStatus, 15000);
+  </script>
+</body>
+</html>

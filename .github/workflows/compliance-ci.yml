@@ -1,0 +1,146 @@
+name: BANXE Compliance CI
+
+# G-20: Release pipeline — runs on push/PR to main
+# Steps: syntax check → pytest → policy drift → compliance check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/compliance/**'
+      - '.github/workflows/compliance-ci.yml'
+      - 'AGENTS.md'
+      - 'docs/SOUL.md'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      update_baseline:
+        description: 'Update policy drift baseline'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  compliance-gate:
+    name: Compliance Gate
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -q \
+            pytest>=8.0.0 \
+            pytest-asyncio>=0.23.0 \
+            pytest-cov>=5.0.0 \
+            pyyaml \
+            jsonschema \
+            aiofiles
+
+      # ── Step 1: Syntax check all compliance Python files ─────────────────────
+      - name: "[1/5] Syntax check"
+        run: |
+          echo "=== Syntax check: src/compliance/**/*.py ==="
+          find src/compliance -name "*.py" | while read f; do
+            python3 -m py_compile "$f" && echo "  ok  $f" || { echo "  FAIL $f"; exit 1; }
+          done
+          echo "Syntax check PASSED"
+
+      # ── Step 2: Run full pytest suite ─────────────────────────────────────────
+      - name: "[2/5] pytest — full suite"
+        run: |
+          python3 -m pytest src/compliance \
+            --ignore=src/compliance/test_api_integration.py \
+            -q --tb=short \
+            --cov=src/compliance \
+            --cov-report=term-missing \
+            --cov-fail-under=0
+        env:
+          PYTHONPATH: src
+
+      # ── Step 3: Policy drift detection (G-08) ────────────────────────────────
+      - name: "[3/5] Policy drift check"
+        run: |
+          echo "=== Policy drift check ==="
+          python3 src/compliance/validators/policy_drift_check.py --verify
+        env:
+          PYTHONPATH: src
+
+      # ── Step 4: Agent passport validation (G-12) ─────────────────────────────
+      - name: "[4/5] Agent passport validation"
+        run: |
+          echo "=== Agent passport validation ==="
+          # Use relative path since banxe-architecture is a sibling repo
+          # In CI, passports are checked in if present; skip if not
+          if [ -d "../banxe-architecture/agents/passports" ]; then
+            python3 src/compliance/validators/validate_agent_passport.py
+          else
+            echo "banxe-architecture not available in CI — skipping passport validation"
+          fi
+        env:
+          PYTHONPATH: src
+
+      # ── Step 5: Compliance invariant check ───────────────────────────────────
+      - name: "[5/5] Compliance invariant check"
+        run: |
+          echo "=== Compliance invariant check ==="
+          # Check critical invariants inline (no external deps)
+          python3 - <<'EOF'
+          import sys, re
+          from pathlib import Path
+
+          src = Path("src/compliance")
+          errors = []
+
+          # I-21: No hardcoded thresholds in orchestrator
+          orch = src / "banxe_aml_orchestrator.py"
+          if orch.exists():
+              text = orch.read_text()
+              for threshold in ["= 85", "= 70", "= 40", "== 85", "== 70", "== 40"]:
+                  # Allow in comments and string literals (basic check)
+                  for line in text.splitlines():
+                      stripped = line.strip()
+                      if threshold in stripped and not stripped.startswith("#"):
+                          if "THRESHOLD" not in stripped and "config" not in stripped.lower():
+                              errors.append(f"I-21 potential violation in {orch.name}: {stripped[:80]}")
+
+          # I-22: PolicyPort has no write methods
+          pp = src / "ports" / "policy_port.py"
+          if pp.exists():
+              text = pp.read_text()
+              if "update_" in text or "write_" in text or "delete_" in text:
+                  errors.append(f"I-22 violation: PolicyPort declares write methods")
+
+          if errors:
+              print("INVARIANT CHECK FAILED:")
+              for e in errors:
+                  print(f"  ✗ {e}")
+              sys.exit(1)
+          else:
+              print("Invariant check PASSED (I-21, I-22)")
+          EOF
+
+  # ── Summary job ───────────────────────────────────────────────────────────────
+  ci-summary:
+    name: CI Summary
+    needs: compliance-gate
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Gate status
+        run: |
+          if [ "${{ needs.compliance-gate.result }}" = "success" ]; then
+            echo "✓ BANXE Compliance CI PASSED"
+          else
+            echo "✗ BANXE Compliance CI FAILED"
+            exit 1
+          fi

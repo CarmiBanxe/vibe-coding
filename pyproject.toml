@@ -1,0 +1,83 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "banxe-ai-bank"
+version = "0.16.0"
+description = "Banxe AI Bank — AML/KYC Compliance Stack (Collective LexisNexis)"
+authors = [{ name = "Moriel Carmi" }]
+readme = "README.md"
+license = { text = "Proprietary" }
+requires-python = ">=3.11"
+
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.29.0",
+    "pydantic>=2.0.0",
+    "httpx>=0.27.0",
+    "redis[asyncio]>=5.0.0",
+    "asyncpg>=0.29.0",
+    "clickhouse-driver>=0.2.7",
+    "langchain-core>=0.1.0",
+    "langgraph>=1.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=5.0.0",
+    "mypy>=1.9.0",
+    "ruff>=0.4.0",
+]
+docs = [
+    "mkdocs-material>=9.5.0",
+    "mkdocstrings[python]>=0.24.0",
+    "mkdocs-gen-files>=0.5.0",
+    "mkdocs-literate-nav>=0.6.0",
+]
+training = [
+    "deepeval>=3.9.0",
+    "evidently>=0.4.0",
+    "langgraph>=1.1.0",
+]
+
+[project.scripts]
+banxe-api     = "compliance.api:app"
+banxe-verify  = "compliance.verify_api:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths    = ["src/compliance"]
+pythonpath   = ["src"]
+addopts      = "--cov=src/compliance --cov-report=html --cov-report=term-missing -q"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::pytest.PytestUnraisableExceptionWarning",
+]
+
+[tool.coverage.run]
+source   = ["src/compliance"]
+omit     = ["*/test_*.py", "*/__main__.py", "*/conftest.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
+
+[tool.ruff]
+line-length    = 120
+target-version = "py311"
+select = ["E", "F", "W", "I", "UP"]
+ignore = ["E501"]  # line length handled separately
+exclude = ["src/compliance/test_*.py"]
+
+[tool.mypy]
+python_version      = "3.11"
+warn_return_any     = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = ["test_.*\\.py$"]

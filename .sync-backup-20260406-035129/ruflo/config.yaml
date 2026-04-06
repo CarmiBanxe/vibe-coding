@@ -1,0 +1,51 @@
+# Ruflo v3 — BANXE Stack Configuration
+# Adapted from guiyon deployment pattern for BANXE
+
+orchestrator:
+  name: banxe-ruflo
+  version: "1.0-banxe"
+
+  # LiteLLM как единый model endpoint
+  llm:
+    base_url: "http://localhost:4000/v1"
+    api_key: "anything"
+    models:
+      architect: "qwen3-30b"        # сложные архитектурные задачи
+      executor: "qwen3-banxe"       # BANXE-домен
+      fast: "glm-4-flash"           # быстрые утилитарные
+      unrestricted: "gpt-oss-20b"   # без ограничений
+    routing:
+      compliance: "qwen3-banxe"
+      code_review: "qwen3-30b"
+      security_scan: "glm-4-flash"
+      analytics: "gpt-oss-20b"
+
+  # OpenClaw интеграция
+  openclaw:
+    moa_bot: "http://localhost:18789"
+    ctio_bot: "http://localhost:18791"
+    carmi_bot: "http://localhost:18793"
+
+  # Партнёры
+  partners:
+    aider:
+      command: "aider"
+      args:
+        - "--openai-api-base"
+        - "http://localhost:4000/v1"
+        - "--openai-api-key"
+        - "anything"
+        - "--model"
+        - "qwen3-30b"
+        - "--auto-commits"
+    mirofish:
+      api: "http://localhost:3000/api"
+
+  # Retry и monitoring
+  retry:
+    max_attempts: 3
+    backoff_seconds: 5
+  monitoring:
+    log_dir: "/data/logs/ruflo/"
+    telegram_alerts: true
+    telegram_chat_id: "508602494"

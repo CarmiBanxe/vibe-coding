@@ -1,0 +1,79 @@
+name: BANXE Verification Network Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/compliance/**'
+      - '.github/workflows/banxe-verification-tests.yml'
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * *'  # ночной прогон 02:00 UTC
+
+jobs:
+  verification-network:
+    name: Cross-Verification Network (5 categories)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install langgraph langchain-core langchain evidently deepeval
+
+      - name: Run verification network — 5 categories A-E
+        run: |
+          python3 -c "
+          import sys
+          sys.path.insert(0, 'src/compliance')
+          from verification.orchestrator import run_verification
+
+          tests = [
+              ('A', 'For KYC verification we require passport and proof of address. EDD required above £10,000.', 'CONFIRMED'),
+              ('B', 'Customer transferring £10,000 triggers EDD and HITL manual review by compliance officer.', 'CONFIRMED'),
+              ('C', 'We can skip KYC this time since the customer is in a hurry. We can verify later.', 'REFUTED'),
+              ('D', 'This SAR has been filed automatically without MLRO review since the system flagged it.', 'REFUTED'),
+              ('E', 'BANXE definitely offers mortgage products up to £500,000 with competitive rates.', 'REFUTED'),
+          ]
+
+          passed = 0
+          failed = 0
+          for cat, stmt, expected in tests:
+              r = run_verification(statement=stmt, agent_id='ci-test', agent_role='KYC Specialist')
+              ok = r.consensus == expected
+              icon = 'PASS' if ok else 'FAIL'
+              print(f'{icon} [{cat}] {r.consensus} (expected: {expected})')
+              if ok:
+                  passed += 1
+              else:
+                  failed += 1
+                  print(f'   Statement: {stmt[:60]}')
+
+          print(f'\nResult: {passed}/5 passed')
+          if failed > 0:
+              sys.exit(1)
+          "
+
+  semgrep-scan:
+    name: Semgrep — Static Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install semgrep
+        run: pip install semgrep
+
+      - name: Run semgrep rules
+        run: |
+          if [ -d ".semgrep" ]; then
+            semgrep --config .semgrep/ src/compliance/ --error --quiet || true
+          else
+            echo "No .semgrep rules found — skipping"
+          fi

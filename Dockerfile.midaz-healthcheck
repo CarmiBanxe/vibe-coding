@@ -1,0 +1,3 @@
+FROM alpine/curl:latest AS curl-donor
+FROM lerianstudio/midaz-ledger:latest
+COPY --from=curl-donor /usr/bin/curl /usr/bin/curl
