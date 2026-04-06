@@ -1,6 +1,6 @@
 # SYSTEM-STATE — GMKtec EVO-X2
 > Автоматически обновляется каждые 5 минут
-> Последнее сканирование: 2026-04-07 01:05 CEST
+> Последнее сканирование: 2026-04-07 01:10 CEST
 > Источник: ctio-watcher.sh v2 (cron)
 
 ## Назначение
@@ -11,8 +11,8 @@
 ---
 
 ## Ресурсы
-- RAM: 11Gi / 30Gi (free: 1.9Gi)
-- Load: 1.77 2.01 2.18
+- RAM: 11Gi / 30Gi (free: 2.2Gi)
+- Load: 2.43 2.27 2.25
 - GPU VRAM used: 58.5 GB
 
 ## Диски
@@ -49,7 +49,6 @@ fail2ban.service running
 fwupd.service running
 getty@tty1.service running
 gnome-remote-desktop.service running
-guiyon-api.service running
 guiyon-bridge.service running
 guiyon-dispatcher.service running
 guiyon-project-api.service running
@@ -188,8 +187,8 @@ xrdp-sesman.service running
 | qwen3-banxe-v2:latest | 17.3 GB | 2026-04-03 |
 | qwen3-banxe:latest | 17.3 GB | 2026-04-02 |
 | qwen3:30b-a3b | 17.3 GB | 2026-04-02 |
-| huihui_ai/glm-4.7-flash-abliterated:latest | 17.5 GB | 2026-03-26 |
 | gurubot/gpt-oss-derestricted:20b | 14.7 GB | 2026-03-26 |
+| huihui_ai/glm-4.7-flash-abliterated:latest | 17.5 GB | 2026-03-26 |
 
 ## ClickHouse
 ### Базы данных
@@ -227,18 +226,18 @@ xrdp-sesman.service running
 | midaz-rabbitmq | rabbitmq:4.1.3-management-alpine | Up 10 hours (healthy) | 4369/tcp, 5671/tcp, 15671/tcp, 15691-15692/tcp, 25672/tcp, 127.0.0.1:3004->5672/tcp, 127.0.0.1:3003->15672/tcp |
 | midaz-mongodb | mongo:8 | Up 10 hours (healthy) | 127.0.0.1:5703->27017/tcp |
 | mirofish | ghcr.io/666ghj/mirofish:latest | Up 21 hours | 0.0.0.0:3001->3000/tcp, [::]:3001->3000/tcp, 0.0.0.0:5004->5001/tcp, [::]:5004->5001/tcp |
-| banxe-marble-frontend | marble-src-marble-frontend | Up 3 days | 0.0.0.0:5003->8080/tcp |
+| banxe-marble-frontend | marble-src-marble-frontend | Up 4 days | 0.0.0.0:5003->8080/tcp |
 | banxe-marble-firebase | andreysenov/firebase-tools | Up 2 days | 5000-5001/tcp, 8080/tcp, 8085/tcp, 9000/tcp, 127.0.0.1:4000->4000/tcp, 9005/tcp, 127.0.0.1:9099->9099/tcp, 9199/tcp |
-| banxe-marble-backend | marble-src-marble-backend | Up 3 days | 127.0.0.1:5002->8080/tcp |
+| banxe-marble-backend | marble-src-marble-backend | Up 4 days | 127.0.0.1:5002->8080/tcp |
 | banxe-marble-postgres | postgis/postgis:17-3.5 | Up 4 days (healthy) | 127.0.0.1:15433->5432/tcp |
 | ballerine-postgres | sibedge/postgres-plv8:15.3-3.1.7 | Up 4 days (healthy) | 5432/tcp |
 | kyb-app | ghcr.io/ballerine-io/kyb-app:dev | Up 4 days | 0.0.0.0:5201->80/tcp, [::]:5201->80/tcp |
 | workflows-dashboard | ghcr.io/ballerine-io/workflows-dashboard:dev | Up 4 days | 0.0.0.0:5200->80/tcp, [::]:5200->80/tcp |
 | backoffice | ghcr.io/ballerine-io/backoffice:dev | Up 4 days | 0.0.0.0:5137->80/tcp, [::]:5137->80/tcp |
-| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up 7 seconds | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
+| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up Less than a second | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
 | jube.webapi | jube.app | Up 4 days (healthy) | 127.0.0.1:5001->5001/tcp |
 | jube.jobs | jube.app | Up 4 days (healthy) | 5001/tcp |
-| postgres | postgres:17 | Up 2 hours | 0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp, 127.0.0.1:15432->5432/tcp |
+| postgres | postgres:17 | Up 3 hours | 0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp, 127.0.0.1:15432->5432/tcp |
 | redis | redis/redis-stack:latest | Up 4 days | 0.0.0.0:6379->6379/tcp, [::]:6379->6379/tcp, 0.0.0.0:8001->8001/tcp, [::]:8001->8001/tcp, 127.0.0.1:16379->6379/tcp, 127.0.0.1:18001->8001/tcp |
 
 ### Образы
@@ -250,8 +249,8 @@ xrdp-sesman.service running
 | marble-src-marble-frontend:latest | 757MB |
 | marble-src-marble-backend:latest | 255MB |
 | andreysenov/firebase-tools:latest | 1.47GB |
-| jube.app:latest | 646MB |
 | <none>:<none> | 646MB |
+| jube.app:latest | 646MB |
 | mongo:8 | 950MB |
 | postgis/postgis:17-3.5 | 637MB |
 | postgres:17 | 453MB |
@@ -380,28 +379,28 @@ xrdp-sesman.service running
 
 
 #### /home/ctio
-- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (16614 bytes, 2026-04-07 01:05:03)
-- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 01:05:03)
+- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (16642 bytes, 2026-04-07 01:10:03)
+- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 01:10:03)
 
 #### /opt
-- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (16614 bytes, 2026-04-07 01:05:03)
-- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 01:05:03)
+- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (16642 bytes, 2026-04-07 01:10:03)
+- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 01:10:03)
 
 #### /data
-- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 01:00:26)
-- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 01:05:03)
-- `/data/guiyon-project/.git/index` (33507 bytes, 2026-04-07 01:05:03)
+- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 01:05:27)
+- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 01:10:01)
+- `/data/guiyon-project/.git/index` (33507 bytes, 2026-04-07 01:10:01)
 
 #### /root
-- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 01:00:13)
-- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (16614 bytes, 2026-04-07 01:05:03)
-- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 01:05:03)
-- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (16614 bytes, 2026-04-07 01:05:03)
-- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 01:05:03)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (16614 bytes, 2026-04-07 01:05:03)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 01:05:03)
-- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (16614 bytes, 2026-04-07 01:05:03)
-- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 01:05:03)
+- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 01:05:14)
+- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (16642 bytes, 2026-04-07 01:10:03)
+- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 01:10:03)
+- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (16642 bytes, 2026-04-07 01:10:03)
+- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 01:10:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (16642 bytes, 2026-04-07 01:10:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 01:10:03)
+- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (16642 bytes, 2026-04-07 01:10:03)
+- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 01:10:03)
 
 ---
 
