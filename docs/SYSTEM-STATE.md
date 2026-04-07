@@ -1,6 +1,6 @@
 # SYSTEM-STATE — GMKtec EVO-X2
 > Автоматически обновляется каждые 5 минут
-> Последнее сканирование: 2026-04-07 11:45 CEST
+> Последнее сканирование: 2026-04-07 11:50 CEST
 > Источник: ctio-watcher.sh v2 (cron)
 
 ## Назначение
@@ -11,8 +11,8 @@
 ---
 
 ## Ресурсы
-- RAM: 11Gi / 30Gi (free: 1.3Gi)
-- Load: 2.91 2.78 2.58
+- RAM: 12Gi / 30Gi (free: 882Mi)
+- Load: 2.06 2.42 2.49
 - GPU VRAM used: 58.5 GB
 
 ## Диски
@@ -49,7 +49,6 @@ fail2ban.service running
 fwupd.service running
 getty@tty1.service running
 gnome-remote-desktop.service running
-guiyon-api.service running
 guiyon-bridge.service running
 guiyon-dispatcher.service running
 guiyon-project-api.service running
@@ -188,8 +187,8 @@ xrdp-sesman.service running
 | qwen3-banxe-v2:latest | 17.3 GB | 2026-04-03 |
 | qwen3-banxe:latest | 17.3 GB | 2026-04-02 |
 | qwen3:30b-a3b | 17.3 GB | 2026-04-02 |
-| gurubot/gpt-oss-derestricted:20b | 14.7 GB | 2026-03-26 |
 | huihui_ai/glm-4.7-flash-abliterated:latest | 17.5 GB | 2026-03-26 |
+| gurubot/gpt-oss-derestricted:20b | 14.7 GB | 2026-03-26 |
 
 ## ClickHouse
 ### Базы данных
@@ -236,7 +235,7 @@ xrdp-sesman.service running
 | kyb-app | ghcr.io/ballerine-io/kyb-app:dev | Up 4 days | 0.0.0.0:5201->80/tcp, [::]:5201->80/tcp |
 | workflows-dashboard | ghcr.io/ballerine-io/workflows-dashboard:dev | Up 4 days | 0.0.0.0:5200->80/tcp, [::]:5200->80/tcp |
 | backoffice | ghcr.io/ballerine-io/backoffice:dev | Up 4 days | 0.0.0.0:5137->80/tcp, [::]:5137->80/tcp |
-| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up 4 seconds | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
+| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up 9 seconds | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
 | jube.webapi | jube.app | Up 5 days (healthy) | 127.0.0.1:5001->5001/tcp |
 | jube.jobs | jube.app | Up 4 days (healthy) | 5001/tcp |
 | postgres | postgres:17 | Up 13 hours | 0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp, 127.0.0.1:15432->5432/tcp |
@@ -251,8 +250,8 @@ xrdp-sesman.service running
 | marble-src-marble-frontend:latest | 757MB |
 | marble-src-marble-backend:latest | 255MB |
 | andreysenov/firebase-tools:latest | 1.47GB |
-| <none>:<none> | 646MB |
 | jube.app:latest | 646MB |
+| <none>:<none> | 646MB |
 | mongo:8 | 950MB |
 | postgis/postgis:17-3.5 | 637MB |
 | postgres:17 | 453MB |
@@ -382,35 +381,28 @@ xrdp-sesman.service running
 
 
 #### /home/ctio
-- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
-- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
+- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (18196 bytes, 2026-04-07 11:50:03)
+- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:50:03)
 
 #### /opt
-- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
-- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
+- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (18196 bytes, 2026-04-07 11:50:03)
+- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:50:03)
 
 #### /data
-- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 11:40:14)
-- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 11:45:03)
-- `/data/guiyon-project/.git/index` (33603 bytes, 2026-04-07 11:45:03)
-- `/data/banxe/banxe-emi-stack/dbt/.user.yml` (41 bytes, 2026-04-07 11:40:34)
-- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_1_dec43d0d326511f1805f844709777b4c.8435e05e-98fd-4d2d-9586-86af73f13217.sql` (151 bytes, 2026-04-07 11:40:53)
-- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_1_d4265275326511f1a85e844709777b4c.55140c95-8edd-4c26-b18e-8cb9982ae75b.sql` (151 bytes, 2026-04-07 11:40:35)
-- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_0_dec43d0d326511f1805f844709777b4c.66a9f6c3-4505-46b7-92af-6697dfc4e6aa.sql` (151 bytes, 2026-04-07 11:40:53)
-- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_0_db03762a326511f18ed2844709777b4c.18cc7e6e-eb05-4460-9cf9-6f57bdc4d61a.sql` (151 bytes, 2026-04-07 11:40:47)
-- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_1_db03762a326511f18ed2844709777b4c.356b4bf1-b863-4505-9071-5c232a3bc877.sql` (151 bytes, 2026-04-07 11:40:47)
-- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_0_d4265275326511f1a85e844709777b4c.059ecbf6-ea7b-4448-91c6-b6210c1366ab.sql` (151 bytes, 2026-04-07 11:40:35)
+- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 11:45:16)
+- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 11:50:00)
+- `/data/guiyon-project/.git/index` (33603 bytes, 2026-04-07 11:50:00)
 
 #### /root
-- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 11:40:15)
-- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
-- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
-- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
-- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
-- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
-- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
+- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 11:45:14)
+- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (18196 bytes, 2026-04-07 11:50:03)
+- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:50:03)
+- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (18196 bytes, 2026-04-07 11:50:03)
+- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:50:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (18196 bytes, 2026-04-07 11:50:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:50:03)
+- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (18196 bytes, 2026-04-07 11:50:03)
+- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:50:03)
 
 ---
 
