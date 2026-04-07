@@ -1,6 +1,6 @@
 # SYSTEM-STATE — GMKtec EVO-X2
 > Автоматически обновляется каждые 5 минут
-> Последнее сканирование: 2026-04-07 11:40 CEST
+> Последнее сканирование: 2026-04-07 11:45 CEST
 > Источник: ctio-watcher.sh v2 (cron)
 
 ## Назначение
@@ -11,8 +11,8 @@
 ---
 
 ## Ресурсы
-- RAM: 11Gi / 30Gi (free: 1.2Gi)
-- Load: 2.71 2.41 2.43
+- RAM: 11Gi / 30Gi (free: 1.3Gi)
+- Load: 2.91 2.78 2.58
 - GPU VRAM used: 58.5 GB
 
 ## Диски
@@ -49,6 +49,7 @@ fail2ban.service running
 fwupd.service running
 getty@tty1.service running
 gnome-remote-desktop.service running
+guiyon-api.service running
 guiyon-bridge.service running
 guiyon-dispatcher.service running
 guiyon-project-api.service running
@@ -187,8 +188,8 @@ xrdp-sesman.service running
 | qwen3-banxe-v2:latest | 17.3 GB | 2026-04-03 |
 | qwen3-banxe:latest | 17.3 GB | 2026-04-02 |
 | qwen3:30b-a3b | 17.3 GB | 2026-04-02 |
-| huihui_ai/glm-4.7-flash-abliterated:latest | 17.5 GB | 2026-03-26 |
 | gurubot/gpt-oss-derestricted:20b | 14.7 GB | 2026-03-26 |
+| huihui_ai/glm-4.7-flash-abliterated:latest | 17.5 GB | 2026-03-26 |
 
 ## ClickHouse
 ### Базы данных
@@ -235,7 +236,7 @@ xrdp-sesman.service running
 | kyb-app | ghcr.io/ballerine-io/kyb-app:dev | Up 4 days | 0.0.0.0:5201->80/tcp, [::]:5201->80/tcp |
 | workflows-dashboard | ghcr.io/ballerine-io/workflows-dashboard:dev | Up 4 days | 0.0.0.0:5200->80/tcp, [::]:5200->80/tcp |
 | backoffice | ghcr.io/ballerine-io/backoffice:dev | Up 4 days | 0.0.0.0:5137->80/tcp, [::]:5137->80/tcp |
-| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up Less than a second | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
+| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up 4 seconds | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
 | jube.webapi | jube.app | Up 5 days (healthy) | 127.0.0.1:5001->5001/tcp |
 | jube.jobs | jube.app | Up 4 days (healthy) | 5001/tcp |
 | postgres | postgres:17 | Up 13 hours | 0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp, 127.0.0.1:15432->5432/tcp |
@@ -250,8 +251,8 @@ xrdp-sesman.service running
 | marble-src-marble-frontend:latest | 757MB |
 | marble-src-marble-backend:latest | 255MB |
 | andreysenov/firebase-tools:latest | 1.47GB |
-| jube.app:latest | 646MB |
 | <none>:<none> | 646MB |
+| jube.app:latest | 646MB |
 | mongo:8 | 950MB |
 | postgis/postgis:17-3.5 | 637MB |
 | postgres:17 | 453MB |
@@ -298,6 +299,7 @@ xrdp-sesman.service running
 0 2 * * * /usr/local/bin/workspace-injection-scan.sh >> /data/logs/injection-scan.log 2>&1
 @reboot sleep 15 && python3 /data/guiyon-project/SCRIPTS/update_tunnel_url.py
 */2 * * * * /usr/local/bin/midaz-healthcheck.sh
+0 7 * * 1-5 cd /data/banxe/banxe-emi-stack && MIDAZ_BASE_URL=http://localhost:8095 MIDAZ_ORG_ID=019d6301-32d7-70a1-bc77-0a05379ee510 MIDAZ_LEDGER_ID=019d632f-519e-7865-8a30-3c33991bba9c CLICKHOUSE_HOST=localhost STATEMENT_DIR=/data/banxe/statements bash /data/banxe/banxe-emi-stack/scripts/daily-recon.sh >> /var/log/banxe/recon.log 2>&1
 ```
 
 ---
@@ -324,6 +326,7 @@ xrdp-sesman.service running
 | Пакет | Версия |
 |-------|--------|
 | accelerate | 1.13.0 |
+| agate | 1.9.1 |
 | aiohappyeyeballs | 2.6.1 |
 | aiohttp | 3.13.5 |
 | aiosignal | 1.4.0 |
@@ -351,8 +354,7 @@ xrdp-sesman.service running
 | charset-normalizer | 3.4.6 |
 | click | 8.3.2 |
 | click-option-group | 0.5.9 |
-| clickhouse-driver | 0.2.10 |
-| cloud-init | 25.3 |
+| clickhouse-connect | 0.15.1 |
 
 ## Недавние установки (apt)
 | Дата | Пакет |
@@ -380,28 +382,35 @@ xrdp-sesman.service running
 
 
 #### /home/ctio
-- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (16619 bytes, 2026-04-07 11:40:03)
-- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:40:03)
+- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
+- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
 
 #### /opt
-- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (16619 bytes, 2026-04-07 11:40:03)
-- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:40:03)
+- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
+- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
 
 #### /data
-- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 11:35:13)
-- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 11:40:00)
-- `/data/guiyon-project/.git/index` (33603 bytes, 2026-04-07 11:40:00)
+- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 11:40:14)
+- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 11:45:03)
+- `/data/guiyon-project/.git/index` (33603 bytes, 2026-04-07 11:45:03)
+- `/data/banxe/banxe-emi-stack/dbt/.user.yml` (41 bytes, 2026-04-07 11:40:34)
+- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_1_dec43d0d326511f1805f844709777b4c.8435e05e-98fd-4d2d-9586-86af73f13217.sql` (151 bytes, 2026-04-07 11:40:53)
+- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_1_d4265275326511f1a85e844709777b4c.55140c95-8edd-4c26-b18e-8cb9982ae75b.sql` (151 bytes, 2026-04-07 11:40:35)
+- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_0_dec43d0d326511f1805f844709777b4c.66a9f6c3-4505-46b7-92af-6697dfc4e6aa.sql` (151 bytes, 2026-04-07 11:40:53)
+- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_0_db03762a326511f18ed2844709777b4c.18cc7e6e-eb05-4460-9cf9-6f57bdc4d61a.sql` (151 bytes, 2026-04-07 11:40:47)
+- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_1_db03762a326511f18ed2844709777b4c.356b4bf1-b863-4505-9071-5c232a3bc877.sql` (151 bytes, 2026-04-07 11:40:47)
+- `/data/clickhouse/data/metadata_dropped/banxe.__dbt_exchange_test_0_d4265275326511f1a85e844709777b4c.059ecbf6-ea7b-4448-91c6-b6210c1366ab.sql` (151 bytes, 2026-04-07 11:40:35)
 
 #### /root
-- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 11:35:14)
-- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (16619 bytes, 2026-04-07 11:40:03)
-- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:40:03)
-- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (16619 bytes, 2026-04-07 11:40:03)
-- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:40:03)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (16619 bytes, 2026-04-07 11:40:03)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:40:03)
-- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (16619 bytes, 2026-04-07 11:40:03)
-- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:40:03)
+- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 11:40:15)
+- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
+- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
+- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
+- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
+- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (16697 bytes, 2026-04-07 11:45:03)
+- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 11:45:03)
 
 ---
 
