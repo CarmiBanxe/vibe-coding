@@ -1,6 +1,6 @@
 # SYSTEM-STATE — GMKtec EVO-X2
 > Автоматически обновляется каждые 5 минут
-> Последнее сканирование: 2026-04-07 12:25 CEST
+> Последнее сканирование: 2026-04-07 12:30 CEST
 > Источник: ctio-watcher.sh v2 (cron)
 
 ## Назначение
@@ -11,8 +11,8 @@
 ---
 
 ## Ресурсы
-- RAM: 11Gi / 30Gi (free: 1.1Gi)
-- Load: 2.11 2.34 2.46
+- RAM: 12Gi / 30Gi (free: 553Mi)
+- Load: 2.25 2.30 2.41
 - GPU VRAM used: 58.5 GB
 
 ## Диски
@@ -224,7 +224,7 @@ xrdp-sesman.service running
 ### Контейнеры
 | Имя | Образ | Статус | Порты |
 |-----|-------|--------|-------|
-| banxe-mock-aspsp | banxe-mock-aspsp:latest | Up 13 hours (healthy) | 0.0.0.0:8888->8888/tcp, [::]:8888->8888/tcp |
+| banxe-mock-aspsp | banxe-mock-aspsp:latest | Up 14 hours (healthy) | 0.0.0.0:8888->8888/tcp, [::]:8888->8888/tcp |
 | banxe-frankfurter | hakanensari/frankfurter:latest | Up 14 hours | 0.0.0.0:8181->8080/tcp, [::]:8181->8080/tcp |
 | midaz-ledger | lerianstudio/midaz-ledger:latest | Up 20 hours | 127.0.0.1:8095->3002/tcp |
 | midaz-rabbitmq | rabbitmq:4.1.3-management-alpine | Up 21 hours (healthy) | 4369/tcp, 5671/tcp, 15671/tcp, 15691-15692/tcp, 25672/tcp, 127.0.0.1:3004->5672/tcp, 127.0.0.1:3003->15672/tcp |
@@ -238,7 +238,7 @@ xrdp-sesman.service running
 | kyb-app | ghcr.io/ballerine-io/kyb-app:dev | Up 4 days | 0.0.0.0:5201->80/tcp, [::]:5201->80/tcp |
 | workflows-dashboard | ghcr.io/ballerine-io/workflows-dashboard:dev | Up 4 days | 0.0.0.0:5200->80/tcp, [::]:5200->80/tcp |
 | backoffice | ghcr.io/ballerine-io/backoffice:dev | Up 4 days | 0.0.0.0:5137->80/tcp, [::]:5137->80/tcp |
-| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up 6 seconds | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
+| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up 12 seconds | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
 | jube.webapi | jube.app | Up 5 days (healthy) | 127.0.0.1:5001->5001/tcp |
 | jube.jobs | jube.app | Up 4 days (healthy) | 5001/tcp |
 | postgres | postgres:17 | Up 14 hours | 0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp, 127.0.0.1:15432->5432/tcp |
@@ -384,28 +384,27 @@ xrdp-sesman.service running
 
 
 #### /home/ctio
-- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (17233 bytes, 2026-04-07 12:25:03)
-- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 12:25:03)
+- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (17234 bytes, 2026-04-07 12:30:03)
+- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 12:30:03)
 
 #### /opt
-- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (17233 bytes, 2026-04-07 12:25:03)
-- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 12:25:03)
+- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (17234 bytes, 2026-04-07 12:30:03)
+- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 12:30:03)
 
 #### /data
-- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 12:20:24)
-- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 12:25:00)
-- `/data/guiyon-project/.git/index` (33603 bytes, 2026-04-07 12:25:00)
+- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 12:25:25)
+- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 12:30:00)
 
 #### /root
-- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 12:20:14)
-- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (17233 bytes, 2026-04-07 12:25:03)
-- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 12:25:03)
-- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (17233 bytes, 2026-04-07 12:25:03)
-- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 12:25:03)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (17233 bytes, 2026-04-07 12:25:03)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 12:25:03)
-- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (17233 bytes, 2026-04-07 12:25:03)
-- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 12:25:03)
+- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 12:25:14)
+- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (17234 bytes, 2026-04-07 12:30:03)
+- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 12:30:03)
+- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (17234 bytes, 2026-04-07 12:30:03)
+- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 12:30:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (17234 bytes, 2026-04-07 12:30:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 12:30:03)
+- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (17234 bytes, 2026-04-07 12:30:03)
+- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 12:30:03)
 
 ---
 
