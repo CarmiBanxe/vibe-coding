@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-04-05T21:50:28.676660+00:00",
+  "updated_at": "2026-04-07T14:15:33.011338+00:00",
   "checksums": {
     "docs/SOUL.md": "38f4bb914c84a8b6d5a301d25aaac33ebcf3cce8cae46b36f3d67ae185c1b1dd",
-    "AGENTS.md": "1030ff1e1eb76a79441f0e6d8c27a4fac74f60affe1000a8d9a30ed3939c14f2",
+    "AGENTS.md": "c28859ad4827400375fb4c2663a21c10e57e113e8c4e1c23d5f7475f0efb3ff9",
     "src/compliance/compliance_config.yaml": "2d6dce918d90121852aab617771aa72d4f39d28b2fdc5a974457b6719f611901",
     "src/compliance/policies/banxe_compliance.rego": "afcf969350a621c661880bc24e896305068817ef4f8cfed4e0b3057335608cd4",
-    "banxe-architecture/INVARIANTS.md": "fe55ea82ae49706bf8d6225ab066a2b2db0d3ddf9f8d66ede5c5b0ea526ca855"
+    "banxe-architecture/INVARIANTS.md": "8db7cdd8d0bb1177c066d7ac924184c4ac8364c5b280f8ce56bf10a5c824e7eb"
   },
   "missing": []
 }
