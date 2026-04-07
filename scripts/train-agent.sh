@@ -201,12 +201,14 @@ def run_scenario(s):
             agent_role=agent_role,
             context={"category": s.get("category", "A"), "scenario_id": s["id"]},
         )
-        verdict     = result.get("consensus", "UNCERTAIN")
-        rule        = result.get("compliance_rule", "")
-        reason      = result.get("compliance_reason", "")
-        drift       = float(result.get("drift_score", 0.0))
-        hitl        = bool(result.get("hitl_required", False))
-        correction  = result.get("correction", "")
+        # run_verification returns a ConsensusResult dataclass (not a dict)
+        _get = lambda k, d="": getattr(result, k, None) or d
+        verdict     = str(_get("consensus", "UNCERTAIN"))
+        rule        = str(_get("compliance_rule", ""))
+        reason      = str(_get("compliance_reason", ""))
+        drift       = float(_get("drift_score", 0.0))
+        hitl        = bool(_get("hitl_required", False))
+        correction  = str(_get("correction", ""))
         return verdict, rule, reason, drift, hitl, correction
     except Exception as e:
         return "ERROR", "", str(e), 0.0, False, ""
