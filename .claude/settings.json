@@ -1,44 +1,53 @@
 {
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write|Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 /home/mmber/vibe-coding/.claude/hooks/il_gate.py"
-          },
-          {
-            "type": "command",
-            "command": "python3 /home/mmber/vibe-coding/.claude/hooks/policy_guard.py"
-          }
+    "hooks": {
+        "PreToolUse": [
+            {
+                "matcher": "Edit|Write|Bash",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/il_gate.py"
+                    },
+                    {
+                        "type": "command",
+                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/policy_guard.py"
+                    }
+                ]
+            },
+            {
+                "matcher": "Bash",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/quality_gate_hook.py"
+                    }
+                ]
+            }
+        ],
+        "PostToolUse": [
+            {
+                "matcher": "Edit|Write",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/invariant_check.py"
+                    },
+                    {
+                        "type": "command",
+                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/bounded_context_check.py"
+                    }
+                ]
+            }
+        ],
+        "UserPromptSubmit": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/load_architecture.py"
+                    }
+                ]
+            }
         ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 /home/mmber/vibe-coding/.claude/hooks/invariant_check.py"
-          },
-          {
-            "type": "command",
-            "command": "python3 /home/mmber/vibe-coding/.claude/hooks/bounded_context_check.py"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 /home/mmber/vibe-coding/.claude/hooks/load_architecture.py"
-          }
-        ]
-      }
-    ]
-  }
+    }
 }
