@@ -1,6 +1,6 @@
 # SYSTEM-STATE — GMKtec EVO-X2
 > Автоматически обновляется каждые 5 минут
-> Последнее сканирование: 2026-04-07 08:10 CEST
+> Последнее сканирование: 2026-04-07 08:15 CEST
 > Источник: ctio-watcher.sh v2 (cron)
 
 ## Назначение
@@ -11,8 +11,8 @@
 ---
 
 ## Ресурсы
-- RAM: 11Gi / 30Gi (free: 1.7Gi)
-- Load: 2.39 2.41 2.45
+- RAM: 12Gi / 30Gi (free: 1.1Gi)
+- Load: 1.95 2.05 2.27
 - GPU VRAM used: 58.6 GB
 
 ## Диски
@@ -234,7 +234,7 @@ xrdp-sesman.service running
 | kyb-app | ghcr.io/ballerine-io/kyb-app:dev | Up 4 days | 0.0.0.0:5201->80/tcp, [::]:5201->80/tcp |
 | workflows-dashboard | ghcr.io/ballerine-io/workflows-dashboard:dev | Up 4 days | 0.0.0.0:5200->80/tcp, [::]:5200->80/tcp |
 | backoffice | ghcr.io/ballerine-io/backoffice:dev | Up 4 days | 0.0.0.0:5137->80/tcp, [::]:5137->80/tcp |
-| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up 1 second | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
+| workflow-service | ghcr.io/ballerine-io/workflows-service:dev | Up 7 seconds | 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp |
 | jube.webapi | jube.app | Up 5 days (healthy) | 127.0.0.1:5001->5001/tcp |
 | jube.jobs | jube.app | Up 4 days (healthy) | 5001/tcp |
 | postgres | postgres:17 | Up 10 hours | 0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp, 127.0.0.1:15432->5432/tcp |
@@ -379,28 +379,28 @@ xrdp-sesman.service running
 
 
 #### /home/ctio
-- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (15513 bytes, 2026-04-07 08:05:36)
-- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 08:05:36)
+- `/home/ctio/.openclaw-ctio/workspace/SYSTEM-STATE.md` (16617 bytes, 2026-04-07 08:15:03)
+- `/home/ctio/.openclaw-ctio/workspace/MEMORY.md` (33818 bytes, 2026-04-07 08:15:03)
 
 #### /opt
-- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (15513 bytes, 2026-04-07 08:05:36)
-- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 08:05:36)
+- `/opt/openclaw/workspace-moa/SYSTEM-STATE.md` (16617 bytes, 2026-04-07 08:15:03)
+- `/opt/openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 08:15:03)
 
 #### /data
-- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 08:05:21)
-- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 08:10:01)
-- `/data/guiyon-project/.git/index` (33603 bytes, 2026-04-07 08:10:01)
+- `/data/guiyon-project/.git/FETCH_HEAD` (0 bytes, 2026-04-07 08:10:22)
+- `/data/guiyon-project/.git/COMMIT_EDITMSG` (34 bytes, 2026-04-07 08:15:03)
+- `/data/guiyon-project/.git/index` (33603 bytes, 2026-04-07 08:15:03)
 
 #### /root
-- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 08:05:13)
-- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (15513 bytes, 2026-04-07 08:05:36)
-- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 08:05:36)
-- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (15513 bytes, 2026-04-07 08:05:36)
-- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 08:05:36)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (15513 bytes, 2026-04-07 08:05:36)
-- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 08:05:36)
-- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (15513 bytes, 2026-04-07 08:05:36)
-- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 08:05:36)
+- `/root/.semgrep/settings.yml` (94 bytes, 2026-04-07 08:10:14)
+- `/root/.openclaw-default/.openclaw/workspace/SYSTEM-STATE.md` (16617 bytes, 2026-04-07 08:15:03)
+- `/root/.openclaw-default/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 08:15:03)
+- `/root/.openclaw-moa/.openclaw/workspace/SYSTEM-STATE.md` (16617 bytes, 2026-04-07 08:15:03)
+- `/root/.openclaw-moa/.openclaw/workspace/MEMORY.md` (33818 bytes, 2026-04-07 08:15:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/SYSTEM-STATE.md` (16617 bytes, 2026-04-07 08:15:03)
+- `/root/.openclaw-moa/.openclaw/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 08:15:03)
+- `/root/.openclaw-moa/workspace-moa/SYSTEM-STATE.md` (16617 bytes, 2026-04-07 08:15:03)
+- `/root/.openclaw-moa/workspace-moa/MEMORY.md` (33818 bytes, 2026-04-07 08:15:03)
 
 ---
 
