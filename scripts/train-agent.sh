@@ -186,6 +186,8 @@ stats = {
 
 corpus_entries = []
 
+TIMESTAMP = time.strftime("%Y%m%d_%H%M%S", time.gmtime())
+
 def run_scenario(s):
     """Run a single scenario through the verifier. Returns (verdict, rule, reason, drift_score, hitl)."""
     statement = s["statement"]
@@ -298,7 +300,6 @@ stats["avg_drift"]       = round(sum(stats["drift_scores"]) / len(stats["drift_s
 stats["hitl_rate"]       = round(stats["hitl_triggers"] / total * 100, 1) if total else 0.0
 
 # Write corpus JSONL
-TIMESTAMP = time.strftime("%Y%m%d_%H%M%S", time.gmtime())
 with open(corpus_file, "w") as f:
     for entry in corpus_entries:
         f.write(json.dumps(entry) + "\n")
