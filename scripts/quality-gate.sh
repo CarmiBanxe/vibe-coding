@@ -133,6 +133,7 @@ fi
 # I-05: no float() in financial context
 FLOAT_HITS=$(grep -rn "float(" $SRC_DIRS 2>/dev/null \
     | grep -iv "# noqa\|# i-05-ok\|test_\|\.pyc" \
+    | grep -v "^\.git/\|/\.git/\|\.lucidshark\|\.cache\|COMMIT_EDITMSG" \
     | grep -E "amount|balance|price|total|fee|rate|decimal" \
     | wc -l); FLOAT_HITS=${FLOAT_HITS:-0}
 if [[ $FLOAT_HITS -gt 0 ]]; then
