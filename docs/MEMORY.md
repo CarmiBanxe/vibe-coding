@@ -537,3 +537,17 @@ banxe_aml_orchestrator.py (POLICY_JURISDICTION/REGULATOR/FRAMEWORK)
 - Ключи в AML слое с `policy_` prefix чтобы не конфликтовать с origin_jurisdiction, residence_jurisdiction
 - Ключи в verification слое без prefix — для читаемости JSONL corpus
 - При multi-jurisdiction (EU/UAE): только поменять значение dict, нулевой рефакторинг (ADR-008)
+
+## Keycloak IAM — BT-011 UNBLOCKED (2026-04-08)
+
+- Keycloak 26.2.5 задеплоен на GMKtec порт **8180** (`docker run --network host`)
+- PostgreSQL для Keycloak: контейнер keycloak-db, порт **5433**, БД `keycloak`
+- Realm: `banxe` | Roles: CEO / MLRO / CCO / OPERATOR / AGENT / AUDITOR / READONLY
+- Clients: `banxe-backend` (Resource Owner PW Grant), `banxe-agents`
+- User: `mark` (Moriel Carmi) → роль CEO
+- **Legion достигает GMKtec:8180 напрямую** — `KEYCLOAK_URL=http://gmktec:8180` работает
+- `IAM_ADAPTER=keycloak` → `KeycloakAdapter` live; `IAM_ADAPTER=mock` (default) → тесты
+- Admin console: `http://gmktec:8180/admin`
+- `KeycloakAdapter`: `banxe-emi-stack/services/iam/mock_iam_adapter.py` (commit b226c56)
+- FA-14 → ✅ DEPLOYED | IL-039 DONE | banxe-architecture commit 29d27be
+- SMS OTP (Twilio) всё ещё ожидает → BT-010
