@@ -450,8 +450,8 @@ class TestMiscEndpoints:
         clean_tx = {
             "flagged": False, "action": "PASS", "rules": [], "risk_score": 0,
         }
-        # api.py calls check_transaction(tx) without await, so force MagicMock
-        with patch("api.check_transaction", new=MagicMock(return_value=clean_tx)):
+        # api.py awaits check_transaction, so use AsyncMock
+        with patch("api.check_transaction", new=AsyncMock(return_value=clean_tx)):
             resp = client.post(
                 "/api/v1/transaction/check",
                 json={
@@ -467,7 +467,7 @@ class TestMiscEndpoints:
     def test_transaction_check_flagged_screens_sender(self):
         flagged_tx = {"flagged": True, "action": "ALERT", "rules": ["THRESHOLD"], "risk_score": 60}
         with (
-            patch("api.check_transaction", new=MagicMock(return_value=flagged_tx)),
+            patch("api.check_transaction", new=AsyncMock(return_value=flagged_tx)),
             patch("api.check_sanctions", new=AsyncMock(return_value=CLEAN_SANCTIONS)),
         ):
             resp = client.post(

@@ -32,6 +32,7 @@ jobs:
             --cov=src/compliance \
             --cov-report=xml:coverage.xml \
             --cov-report=term-missing \
+            --cov-fail-under=80 \
             -q
         env:
           PYTHONPATH: src
@@ -53,6 +54,6 @@ jobs:
           root = tree.getroot()
           pct = float(root.attrib.get('line-rate', 0)) * 100
           print(f'Coverage: {pct:.1f}%')
-          if pct < 60:
-              print('WARNING: coverage below 60%')
+          if pct < 80:
+              print('WARNING: coverage below 80%')
           "

@@ -229,8 +229,19 @@ async def score_transaction(tx: TransactionInput) -> tuple[list[RiskSignal], dic
 
 
 # Backwards-compatible alias used by existing callers
-async def check_transaction(tx: TransactionInput) -> dict:
-    """Legacy wrapper — use aml_orchestrator.assess() for new code."""
+async def check_transaction(tx) -> dict:
+    """Legacy wrapper — use aml_orchestrator.assess() for new code.
+
+    Accepts either a TransactionInput dataclass or a legacy dict with keys:
+      from, to, amount, currency, tx_type, jurisdiction
+    """
+    if isinstance(tx, dict):
+        tx = TransactionInput(
+            origin_jurisdiction=(tx.get("jurisdiction") or "GB").upper(),
+            destination_jurisdiction=(tx.get("to_jurisdiction") or tx.get("jurisdiction") or "GB").upper(),
+            amount_gbp=float(tx.get("amount", 0)),
+            currency=tx.get("currency", "GBP"),
+        )
     signals, meta = await score_transaction(tx)
     score = min(sum(s.score for s in signals), 100)
     decision = ("SAR" if score >= _THRESHOLD_SAR else
