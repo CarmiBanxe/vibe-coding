@@ -37,7 +37,8 @@ echo "[3/5] WebSocket..."
 WS_TEST=$(curl -s --max-time 5 -o /dev/null -w "%{http_code}" \
     -H "Upgrade: websocket" \
     -H "Connection: Upgrade" \
-    -H "Sec-WebSocket-Key: SANITIZED_SAMPLE_NONCE" \
+    -H "Sec-WebSocket-Key: EXAMPLE_NONCE_BASE64" \
+
     -H "Sec-WebSocket-Version: 13" \
     http://127.0.0.1:18789/ 2>/dev/null)
 echo "  WebSocket upgrade → HTTP $WS_TEST (101=OK, другое=проблема)"

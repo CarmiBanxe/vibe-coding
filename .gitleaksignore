@@ -1,3 +1,9 @@
+# .gitleaksignore — Gitleaks false positive suppressions
+# Format: <commit-sha>:<file>:<rule>:<line>
+# These are example/placeholder values, not real secrets.
+
+# RFC 6455 WebSocket example nonce — base64("the sample nonce")
+# scripts/fix-webui-connect.sh — Sec-WebSocket-Key diagnostic header
 d7db15d2b1caed32081f31bf01f24d776d5dd2e8:docs/bot-archive-analysis.md:curl-auth-header:757
 7cb5579f94fb6366c36aa90a6ccac6b7432c91e0:scripts/fix-webui-connect.sh:generic-api-key:40
 7cb5579f94fb6366c36aa90a6ccac6b7432c91e0:docs/bot-archive-analysis.md:curl-auth-header:757

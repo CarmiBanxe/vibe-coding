@@ -754,7 +754,9 @@ alias gmk-win='ssh -i ~/.ssh/gmktec_key "GMK tec@192.168.0.117"'
 
 **Проверка моделей LiteLLM:**
 ```bash
-curl http://localhost:8080/v1/models -H "Authorization: Bearer SANITIZED_LOCAL_KEY" | python3 -m json.tool
+curl http://localhost:8080/v1/models -H "Authorization: Bearer YOUR_API_KEY_HERE" | python3 -m json.tool
+
+
 ```
 
 **Проверка Ollama на GMKtec:**
