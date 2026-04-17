@@ -704,7 +704,7 @@ model_list:
       api_key: os.environ/GOOGLE_API_KEY
 
 general_settings:
-  master_key: local-key
+  master_key: SANITIZED_LOCAL_KEY
 
 litellm_settings:
   drop_params: true
@@ -754,7 +754,7 @@ alias gmk-win='ssh -i ~/.ssh/gmktec_key "GMK tec@192.168.0.117"'
 
 **Проверка моделей LiteLLM:**
 ```bash
-curl http://localhost:8080/v1/models -H "Authorization: Bearer local-key" | python3 -m json.tool
+curl http://localhost:8080/v1/models -H "Authorization: Bearer SANITIZED_LOCAL_KEY" | python3 -m json.tool
 ```
 
 **Проверка Ollama на GMKtec:**
