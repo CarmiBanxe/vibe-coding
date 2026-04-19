@@ -8,6 +8,7 @@ on:
       - "src/**"
       - "mkdocs.yml"
       - "pyproject.toml"
+      - ".github/workflows/docs.yml"
 
 jobs:
   build:
