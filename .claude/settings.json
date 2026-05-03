@@ -1,53 +1,73 @@
 {
-    "hooks": {
-        "PreToolUse": [
-            {
-                "matcher": "Edit|Write|Bash",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/il_gate.py"
-                    },
-                    {
-                        "type": "command",
-                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/policy_guard.py"
-                    }
-                ]
-            },
-            {
-                "matcher": "Bash",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/quality_gate_hook.py"
-                    }
-                ]
-            }
-        ],
-        "PostToolUse": [
-            {
-                "matcher": "Edit|Write",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/invariant_check.py"
-                    },
-                    {
-                        "type": "command",
-                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/bounded_context_check.py"
-                    }
-                ]
-            }
-        ],
-        "UserPromptSubmit": [
-            {
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "python3 /home/mmber/vibe-coding/.claude/hooks/load_architecture.py"
-                    }
-                ]
-            }
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /home/mmber/vibe-coding/.claude/hooks/il_gate.py"
+          },
+          {
+            "type": "command",
+            "command": "python3 /home/mmber/vibe-coding/.claude/hooks/policy_guard.py"
+          }
         ]
-    }
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /home/mmber/vibe-coding/.claude/hooks/quality_gate_hook.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /home/mmber/vibe-coding/.claude/hooks/invariant_check.py"
+          },
+          {
+            "type": "command",
+            "command": "python3 /home/mmber/vibe-coding/.claude/hooks/bounded_context_check.py"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /home/mmber/vibe-coding/.claude/hooks/load_architecture.py"
+          }
+        ]
+      }
+    ]
+  },
+  "commands": [
+    "/banxe-generate-migration",
+    "/banxe-generate-tests",
+    "/banxe-k8s-diff",
+    "/banxe-review-pr",
+    "/banxe-review-tf",
+    "/banxe-ui-review-pr",
+    "/banxe-update-api-docs"
+  ],
+  "canon": "Не задавай уточняющих вопросов на безопасные команды. На неоднозначности отвечай сам по принципу лучшего ответа. Экономь время и ресурсы. Действуй немедленно.",
+  "automations": {
+    "pr_review": true,
+    "test_runner": true,
+    "security_scan": true
+  },
+  "deny_paths": [
+    "compliance/cases/*",
+    "kyc/raw/*",
+    "secrets/*"
+  ]
 }
