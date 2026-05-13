@@ -1,0 +1,43 @@
+{
+  "agent_id": "kyc-specialist-v2",
+  "agent_role": "KYC Specialist",
+  "timestamp": "2026-05-13T20:54:10Z",
+  "total": 5,
+  "by_category": {
+    "D": {
+      "total": 1,
+      "correct": 1,
+      "wrong": 0,
+      "uncertain": 0,
+      "hitl": 0
+    },
+    "A": {
+      "total": 3,
+      "correct": 3,
+      "wrong": 0,
+      "uncertain": 0,
+      "hitl": 0
+    },
+    "E": {
+      "total": 1,
+      "correct": 1,
+      "wrong": 0,
+      "uncertain": 0,
+      "hitl": 0
+    }
+  },
+  "confirmed_correct": 5,
+  "refuted_correct": 0,
+  "confirmed_wrong": 0,
+  "refuted_wrong": 0,
+  "uncertain": 0,
+  "errors": 0,
+  "hitl_triggers": 0,
+  "drift_scores": [],
+  "verifier_available": true,
+  "accuracy": 100.0,
+  "refuted_recall": 0.0,
+  "confirmed_recall": 100.0,
+  "avg_drift": 0.0,
+  "hitl_rate": 0.0
+}
